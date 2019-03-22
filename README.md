@@ -44,6 +44,8 @@ With:
   - post_categories = comma separated categories  // e.g: bloging
 ```
 
+> If you have already posts in your wp site then use `wp2ff.sh` to export all these posts into previously described flat file structure.
+
 ### Import flat file markdown into Wordpress
 
 Once posts folder is ready:
