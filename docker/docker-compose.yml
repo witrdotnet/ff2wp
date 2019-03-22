@@ -15,7 +15,7 @@ services:
     volumes:
       - ./wp-cli.phar:/usr/local/bin/wp
       - ./posts/:/var/posts/
-      - ./importPosts.sh:/var/importPosts.sh
+      - ../ff2wp.sh:/var/ff2wp.sh
 
   db:
     image: mysql:5.7
