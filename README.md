@@ -6,7 +6,7 @@ Wordpress is cool, we can not live without, but it could be better with git vers
 
 - your Wordpress site
 - wp-cli installed on host
-- wp-markdown plugin installed, activated and enabled (see (how to enable)[https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown])
+- wp-markdown plugin installed, activated and enabled (see [how to enable](https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown))
 
 ## How To
 
@@ -14,6 +14,7 @@ Wordpress is cool, we can not live without, but it could be better with git vers
 
 Clone this project and prepare posts directory like following:
 
+```
 posts
 ├── 2019
 │   └── 1
@@ -26,6 +27,7 @@ posts
 │   └── 2
 │       ├── content.md
 │       └── prop.properties
+```
 
 With:
 
@@ -46,7 +48,7 @@ With:
 
 Once posts folder is ready:
 
-1. Install wp-cli on your wordpress host (from here)[https://wp-cli.org/fr/#installation].
+1. Install wp-cli on your wordpress host [from here](https://wp-cli.org/fr/#installation).
 
 2. Copy your posts directory into your wordpress host.
 
@@ -60,4 +62,4 @@ Enjoy !
 
 You may want test this on docker before enjoying:
 
-(Start with wordpress on docker)[./docker]
+[Start with wordpress on docker](./docker)
