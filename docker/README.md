@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-run ./startup.sh
+run `./startup.sh`
 
 ## Details
 
@@ -15,7 +15,7 @@ chmod +x wp-cli.phar
 
 Then start wordpress (with docker compose) `docker-compose up -d`
 
-Configure site manually (http://localhost:8080) or :
+Configure wordpress (http://localhost:8080) :
 
 ```
 docker exec -ti --user www-data wordpress bash -c "wp core install --title=ff2wp --admin_user=admin --admin_password=admin --admin_email=user@domain.com --skip-email --url=http://localhost:8080"
@@ -34,6 +34,6 @@ Enable markdown manually in Wordpress settings: see [how to enable](https://en.s
 Finally proceed import posts into wordpress container
 
 ```
-docker exec -ti --user www-data wordpress bash -c /var/ff2wp.sh
+docker exec -ti --user www-data wordpress bash -c "/var/ff2wp.sh -w /var/www/html -p /var/posts"
 ```
 

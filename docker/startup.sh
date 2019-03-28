@@ -34,9 +34,10 @@ docker exec -ti --user www-data wordpress bash -c "wp plugin install /var/wp-mar
 # Finally proceed import posts into wordpress container
 echo "====================="
 echo "Wordpress is READY"
-echo "1. Enable markdown manually in Wordpress settings: https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown"
-echo "2. Run following to start import:"
+echo "1. Login to http://localhost:8080/wp-login.php with admin/admin"
+echo "2. Enable markdown manually in Wordpress settings: https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown"
+echo "3. Run following to start import:"
 echo ""
-echo "  docker exec -ti --user www-data wordpress bash -c /var/ff2wp.sh"
+echo "  docker exec -ti --user www-data wordpress bash -c \"/var/ff2wp.sh -w /var/www/html -p /var/posts\""
 echo ""
 echo "====================="

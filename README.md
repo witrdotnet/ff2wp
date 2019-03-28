@@ -4,9 +4,9 @@ Wordpress is cool, we can not live without, but it could be better with git vers
 
 ## Requirements
 
-- your Wordpress site
-- wp-cli installed on host
-- wp-markdown plugin installed, activated and enabled (see [how to enable](https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown))
+- Your Wordpress site
+- Installed wp-cli on wordpress host (install [from here](https://wp-cli.org/fr/#installation)).
+- Installed wp-markdown plugin, activated and enabled (see [how to enable](https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown))
 
 ## How To
 
@@ -50,18 +50,16 @@ With:
 
 Once posts folder is ready:
 
-1. Install wp-cli on your wordpress host [from here](https://wp-cli.org/fr/#installation).
+1. Copy your posts directory into your wordpress host.
 
-2. Copy your posts directory into your wordpress host.
-
-3. Copy ff2wp.sh script into your wordpress host and run it:
+2. Copy ff2wp.sh script into your wordpress host and run it:
 
 ```
-./ff2wp.sh <wordpress dir> <posts dir>
+./ff2wp.sh -w <wordpress dir> -p <posts dir>
 ```
 
 Enjoy !
 
 You may want test this on docker before enjoying:
 
-[Start with wordpress on docker](./docker)
+[Start with ff2wp on docker](./docker)
