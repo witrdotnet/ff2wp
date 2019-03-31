@@ -62,33 +62,32 @@ echo ""
 read -n 1 -s -r -p "Press any key to continue (ctrl-c to abort) ..."
 echo -e "\n\n"
 
-echo "About to create if not yet exists posts directory"
-mkdir -p $posts_dir
-
-cd $wordpress_dir
+if [ "$dryrun" = "true" ]; then
+  echo ">> mode dryrun.. skip create posts directory, temporary directory will be used instead"
+  posts_dir=$(mktemp -d)
+else
+  echo "About to create if not yet exists posts directory"
+  mkdir -p $posts_dir
+fi
 
 if [ "$reset" = "true" ]; then
   if [ "$dryrun" = "true" ]; then
-    echo ">> mode dryrun.. requested reset is ignored"
+    echo ">> mode dryrun.. skip reset posts directory"
   else
     echo "About to delete all contents of posts directory"
-    rm -rf $posts_dir
+    rm -rf $posts_dir/*
   fi
 fi
 
+cd $wordpress_dir
+
 # export no posts
+echo "export to WXR file all except posts"
 wp export --dir=$posts_dir --post_type__not_in=post,revision --skip_comments
 
+# export posts
+echo "start exporting posts to flat files"
 wp post list --post_type=post --field=ID | while read postId; do
-
-  post_year=$(wp post get --field=post_date $postId | cut -d'-' -f1)
-  post_dir_name=$postId
-  echo "=== export $postId to $posts_dir/$post_year/$post_dir_name"
-  current_post_dir=$posts_dir/$post_year/$post_dir_name
-  mkdir -p $current_post_dir
-
-  # export post content
-  wp post get $postId --field=post_content > $current_post_dir/content.md
 
   # post properties
   post_date="$(wp post get $postId --field=post_date)"
@@ -102,6 +101,24 @@ wp post list --post_type=post --field=ID | while read postId; do
 
   # post categories
   post_categories=$(wp post term list $postId category --fields=name --format=csv | tail -n +2 | tr '\n' ',' | sed 's/,$//')
+
+  # post target directory name
+  # it's the post title devoid of all chars except dash, spaces and alphanumeric. And then all spaces replaced with dash. And truncated to 100 chars
+  post_dir_name=$(echo "$post_title" | sed "s/[^-[:space:][:alnum:]]//g" | sed -E "s/\s+/-/g" | cut -c 1-100)
+  if [ "$post_dir_name" = "" ]; then
+    post_dir_name="post-no-title"
+  fi
+  post_year=$(echo "$post_date" | cut -d'-' -f1)
+  current_post_dir=$posts_dir/$post_year/$post_dir_name
+  if [ -d "$current_post_dir" ]; then
+    post_dir_name="$post_dir_name-$postId"
+    current_post_dir=$posts_dir/$post_year/$post_dir_name
+  fi
+  mkdir -p $current_post_dir
+  echo "=== export $postId to $current_post_dir"
+
+  # export post content
+  wp post get $postId --field=post_content > $current_post_dir/content.md
 
   # export properties to properties file
   echo "post_date       = $post_date"       >> $current_post_dir/prop.properties
