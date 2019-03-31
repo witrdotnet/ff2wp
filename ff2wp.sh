@@ -2,19 +2,21 @@
 
 function usage {
   echo -e "\n=========================\n"
-  echo "Usage: $0 [-w wordpress directory] [-p posts directory] [-d]"
+  echo "Usage: $0 [-w wordpress directory] [-p posts directory] [-d] [-r]"
   echo ""
-  echo " -w: requires arg wordpress directory"
-  echo " -p: requires arg posts directory"
-  echo " -d: no arg required, switch dry run mode"
+  echo " -w: wordpress directory"
+  echo " -p: posts directory"
+  echo " -d: dry-run mode (no changes will be applied)"
+  echo " -r: reset (deletes all posts, tags and categories on wordpress host), ignored in dry-run mode"
   echo -e "\n========================="
 }
 
 wordpress_dir=""
 posts_dir=""
 dryrun=false
+reset=false
 
-while getopts ":w:p:dh" opt; do
+while getopts ":w:p:drh" opt; do
   case $opt in
     w)
       wordpress_dir=$(realpath $OPTARG)
@@ -24,6 +26,9 @@ while getopts ":w:p:dh" opt; do
       ;;
     d)
       dryrun=true
+      ;;
+    r)
+      reset=true
       ;;
     h)
       usage
@@ -48,11 +53,27 @@ if [ -z "$wordpress_dir" ] || [ -z "$posts_dir" ]; then
   exit 1
 fi
 
-echo "about to import ff to wp .."
-echo "wordpress dir: $wordpress_dir"
-echo "posts dir: $posts_dir"
+echo -e "\nabout to import ff to wp ..\n"
+echo "  wordpress dir : $wordpress_dir"
+echo "  posts dir     : $posts_dir"
+echo "  mode dry-run  : $dryrun"
+echo "  reset         : $reset"
+echo ""
+read -n 1 -s -r -p "Press any key to continue (ctrl-c to abort) ..."
+echo -e "\n\n"
 
 cd $wordpress_dir
+
+if [ "$reset" = "true" ]; then
+  if [ "$dryrun" = "true" ]; then
+    echo ">> mode dryrun.. requested reset is ignored"
+  else
+    echo "About to delete all posts, tags and categories"
+    wp post delete $(wp post list --format=ids) --force --defer-term-counting
+    wp term list post_tag --field=term_id | xargs wp term delete post_tag
+    wp term list category --field=term_id | xargs wp term delete category
+  fi
+fi
 
 ls $posts_dir | while read postYear; do
   ls $posts_dir/$postYear | while read postId; do
