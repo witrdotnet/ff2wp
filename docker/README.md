@@ -34,6 +34,6 @@ Enable markdown manually in Wordpress settings: see [how to enable](https://en.s
 Finally proceed import posts into wordpress container
 
 ```
-docker exec -ti --user www-data wordpress bash -c "/var/ff2wp.sh -w /var/www/html -p /var/posts"
+docker exec -ti --user www-data wordpress bash -c "/var/ff2wp.sh -w /var/www/html -p /var/posts" -r
 ```
 

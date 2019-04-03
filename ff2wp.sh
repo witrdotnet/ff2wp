@@ -70,6 +70,8 @@ if [ "$reset" = "true" ]; then
   else
     echo "About to delete all posts, tags and categories"
     wp post delete $(wp post list --format=ids) --force --defer-term-counting
+    wp post delete $(wp post list --post_type=page --format=ids) --force --defer-term-counting
+    wp post delete $(wp post list --post_status=trash --format=ids) --force --defer-term-counting
     wp term list post_tag --field=term_id | xargs wp term delete post_tag
     wp term list category --field=term_id | xargs wp term delete category
   fi
@@ -88,6 +90,7 @@ ls $posts_dir | while read postYear; do
     post_date="$(grep 'post_date ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )"
     post_title="$(grep 'post_title ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )"
     post_status="$(grep 'post_status ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )"
+    post_type="$(grep 'post_type ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )"
     tags_input=$(grep 'post_tags ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )
     post_category=$(grep 'post_categories ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )
 
@@ -95,6 +98,7 @@ ls $posts_dir | while read postYear; do
     echo "  --post_date=\"$post_date\""
     echo "  --post_title=\"$post_title\""
     echo "  --post_status=\"$post_status\""
+    echo "  --post_type=\"$post_type\""
     echo "  --tags_input=$tags_input"
     echo "  --post_category=$post_category"
     echo "  --post_author=$post_author"
@@ -106,6 +110,7 @@ ls $posts_dir | while read postYear; do
 	    --post_date="$post_date" \
 	    --post_title="$post_title" \
 	    --post_status="$post_status" \
+	    --post_type="$post_type" \
 	    --tags_input=$tags_input \
 	    --post_category=$post_category \
 	    --post_author=$post_author \

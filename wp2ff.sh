@@ -83,17 +83,18 @@ cd $wordpress_dir
 
 # export no posts
 echo "export to WXR file all except posts"
-wp export --dir=$posts_dir --post_type__not_in=post,revision --skip_comments
+wp export --dir=$posts_dir --post_type__not_in=post,revision,page --skip_comments
 
 # export posts
 echo "start exporting posts to flat files"
-wp post list --post_type=post --field=ID | while read postId; do
+wp post list --post_type=post,page --field=ID | while read postId; do
 
   # post properties
   post_date="$(wp post get $postId --field=post_date)"
   post_date_gmt="$(wp post get $postId --field=post_date_gmt)"
   post_title="$(wp post get $postId --field=post_title)"
   post_status=$(wp post get $postId --field=post_status)
+  post_type=$(wp post get $postId --field=post_type)
   post_author=$(wp post get $postId --field=post_author)
 
   # post tags
@@ -109,10 +110,15 @@ wp post list --post_type=post --field=ID | while read postId; do
     post_dir_name="post-no-title"
   fi
   post_year=$(echo "$post_date" | cut -d'-' -f1)
-  current_post_dir=$posts_dir/$post_year/$post_dir_name
+  if [ "$post_type" = "post" ]; then
+    post_subdir="$post_year"
+  else
+    post_subdir="pages"
+  fi
+  current_post_dir=$posts_dir/$post_subdir/$post_dir_name
   if [ -d "$current_post_dir" ]; then
     post_dir_name="$post_dir_name-$postId"
-    current_post_dir=$posts_dir/$post_year/$post_dir_name
+    current_post_dir=$posts_dir/$post_subdir/$post_dir_name
   fi
   mkdir -p $current_post_dir
   echo "=== export $postId to $current_post_dir"
@@ -125,6 +131,7 @@ wp post list --post_type=post --field=ID | while read postId; do
   echo "post_date_gmt   = $post_date_gmt"   >> $current_post_dir/prop.properties
   echo "post_title      = $post_title"      >> $current_post_dir/prop.properties
   echo "post_status     = $post_status"     >> $current_post_dir/prop.properties
+  echo "post_type       = $post_type"       >> $current_post_dir/prop.properties
   echo "post_author     = $post_author"     >> $current_post_dir/prop.properties
   echo "post_tags       = $post_tags"       >> $current_post_dir/prop.properties
   echo "post_categories = $post_categories" >> $current_post_dir/prop.properties

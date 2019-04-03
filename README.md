@@ -17,14 +17,21 @@ Clone this project and prepare posts directory like following:
 ```
 posts
 ├── 2019
-│   └── 1
+│   └── agile-software-development
 │       ├── content.md
 │       └── prop.properties
 ├── 2018
-│   ├── 1
+│   ├── debug-with-git-bisect
 │   │   ├── content.md
 │   │   └── prop.properties
-│   └── 2
+│   └── what-is-immutable-infrastructure
+│       ├── content.md
+│       └── prop.properties
+├── pages
+│   ├── about-me
+│   │   ├── content.md
+│   │   └── prop.properties
+│   └── contact-me
 │       ├── content.md
 │       └── prop.properties
 ```
@@ -35,13 +42,14 @@ With:
 - prop.properties: properties of each article must contain:
 
 ```
-  - post_date       = date of post                // e.g 2019-03-14 23:55:44
+  - post_date       = date of post                // e.g: 2019-03-14 23:55:44
   - post_date_gmt   = gmt date of post            // e.g: 2019-03-14 23:55:44
   - post_title      = title of post               // e.g: Hello World !
-  - post_status     = wordpress status of article // e.g: publish
+  - post_status     = wordpress status of article // possible values: publish, pending, draft
+  - post_type       = type of post                // possible values: post, page
   - post_author     = id of wordpress author      // e.g: 1
-  - post_tags       = comma separated tags        // e.g: wp,import
-  - post_categories = comma separated categories  // e.g: bloging
+  - post_tags       = comma separated tags        // e.g: ansible,shell,deployment
+  - post_categories = comma separated categories  // e.g: IT,devops
 ```
 
 > If you have already posts in your wp site then use `wp2ff.sh` to export all these posts into previously described flat file structure.
