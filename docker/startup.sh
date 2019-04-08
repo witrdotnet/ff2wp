@@ -19,10 +19,10 @@ docker-compose up -d
 
 # Wait until wordpress started
 echo "== Waiting for wordpress started"
-sleep 10
+while [ "$(HEAD http://localhost:8080 | grep '200\ OK' | wc -l)" = "0" ]; do echo -n "."; sleep 1; done;
 
 # Configure site
-echo "== Configure wordpress site"
+echo -e "\n== Configure wordpress site"
 docker exec -ti --user www-data wordpress bash -c "wp core install --title=ff2wp --admin_user=admin --admin_password=admin --admin_email=user@domain.com --skip-email --url=http://localhost:8080"
 
 # Install and activate wp-markdown plugin
@@ -38,6 +38,6 @@ echo "1. Login to http://localhost:8080/wp-login.php with admin/admin"
 echo "2. Enable markdown manually in Wordpress settings: https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown"
 echo "3. Run following to start import:"
 echo ""
-echo "  docker exec -ti --user www-data wordpress bash -c \"/var/ff2wp.sh -w /var/www/html -p /var/posts\" -r"
+echo "  docker exec -ti --user www-data wordpress bash -c \"/var/ff2wp.sh -w /var/www/html -p /var/posts -r\""
 echo ""
 echo "====================="
