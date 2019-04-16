@@ -29,7 +29,12 @@ docker cp wp-markdown.1.6.1.zip wordpress:/var/
 docker exec -ti --user www-data wordpress bash -c "wp plugin install /var/wp-markdown.1.6.1.zip --activate"
 ```
 
-Enable markdown manually in Wordpress settings: see [how to enable](https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown)
+Enable markdown:
+- manually in Wordpress settings: see [how to enable](https://en.support.wordpress.com/wordpress-editor/blocks/markdown-block/#enabling-markdown),
+- or with wp-cli:
+```
+docker exec -ti --user www-data wordpress bash -c "wp option update markdown --format=json '{ \"post_types\" : { \"0\" : \"post\", \"1\" : \"page\",  \"2\" : \"comment\" }, \"markdownbar\" : { \"0\" : \"posteditor\", \"1\" : \"comment\" }, \"prettify\" : \"0\" }'"
+```
 
 Finally proceed import posts into wordpress container
 
