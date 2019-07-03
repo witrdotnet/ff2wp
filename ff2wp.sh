@@ -81,7 +81,7 @@ ls $posts_dir | while read postYear; do
   ls $posts_dir/$postYear | while read postId; do
     echo "=== import $postYear : $postId"
 
-    grep 'post_categories ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' | sed 's/,/\n/g' | while read post_categ; do
+    grep 'post_categories ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' | sed "s/[[:space:]]//g" | sed 's/,/\n/g' | while read post_categ; do
       echo "try to create category: $post_categ"
       wp term create category "$post_categ" 2>/dev/null
     done
@@ -91,8 +91,8 @@ ls $posts_dir | while read postYear; do
     post_title="$(grep 'post_title ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )"
     post_status="$(grep 'post_status ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )"
     post_type="$(grep 'post_type ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )"
-    tags_input=$(grep 'post_tags ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )
-    post_category=$(grep 'post_categories ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' )
+    tags_input=$(grep 'post_tags ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' | sed "s/[[:space:]]//g")
+    post_category=$(grep 'post_categories ' $posts_dir/$postYear/$postId/prop.properties | awk -F '= ' '{print $2}' | sed "s/[[:space:]]//g" )
 
     echo "about to create post: $post_title ($post_status)"
     echo "  --post_date=\"$post_date\""
